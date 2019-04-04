@@ -1,7 +1,6 @@
 import librosa
 import numpy as np
 import os
-import cv2
 import pickle
 from keras.utils import np_utils
 

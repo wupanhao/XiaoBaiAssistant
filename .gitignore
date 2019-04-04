@@ -1,7 +1,3 @@
-/img_data
-/npy_data
-/qd_emo
-/QuickDraw
 __pycache__
 features
 labels
