@@ -1,0 +1,11 @@
+/img_data
+/npy_data
+/Tensorboard
+__pycache__
+features
+labels
+*.npy
+*.png
+*.bmp
+*.h5
+*.zip
