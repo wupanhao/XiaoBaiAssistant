@@ -16,8 +16,8 @@ from data_utils import loadFromPickle,prepress_labels,get_labels
 def keras_model1(input_shape,output_shape):
     # 构建模型
     model = Sequential()
-    model.add(Dense(output_shape*4, activation='relu',input_shape=input_shape))
-    model.add(Dense(output_shape*2, activation='relu'))
+    model.add(Dense(512, activation='relu',input_shape=input_shape))
+    model.add(Dense(128, activation='relu'))
     model.add(Dense(output_shape, activation='softmax'))
     # [编译模型] 配置模型，损失函数采用交叉熵，优化采用Adadelta，将识别准确率作为模型评估
     model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(), metrics=['accuracy'])
@@ -28,9 +28,9 @@ def keras_model1(input_shape,output_shape):
 
 def keras_model(input_shape,output_shape):
     model = Sequential()
-    model.add(Conv2D(32, (5, 5), input_shape=input_shape, activation='relu'))
+    model.add(Conv2D(16, (5, 5), input_shape=input_shape, activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2), padding='same'))
-    model.add(Conv2D(64, (5, 5), activation='relu'))
+    model.add(Conv2D(16, (5, 5), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2), padding='same'))
 
     model.add(Flatten())

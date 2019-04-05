@@ -88,4 +88,4 @@ def test_model1():
     model.save('asr_model.h5') # 保存训练模型
 
 if __name__ == '__main__':
-	test_model1()
+	test_model()
