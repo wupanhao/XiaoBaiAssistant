@@ -23,12 +23,11 @@ def prepress_labels(labels):
 
 def keras_model_1dconv(input_shape,num_classes):
     model = Sequential()
-    # model.add(keras.layers.core.Reshape((20, 64), input_shape=input_shape))
-    model.add(Conv1D(100, 1, activation='relu', input_shape=input_shape))
-    # model.add(Conv1D(100, 1, activation='relu'))
+    model.add(Conv1D(512, 10, activation='relu', input_shape=input_shape))
+    model.add(Conv1D(256, 10, activation='relu'))
     model.add(MaxPooling1D(2))
-    # model.add(Conv1D(160, 1, activation='relu'))
-    model.add(Conv1D(160, 1, activation='relu'))
+    model.add(Conv1D(128, 10, activation='relu'))
+    model.add(Conv1D(64, 10, activation='relu'))
     model.add(GlobalAveragePooling1D())
     model.add(Dropout(0.5))
     model.add(Dense(num_classes, activation='softmax'))
@@ -44,8 +43,12 @@ def keras_model_1dconv(input_shape,num_classes):
 def keras_model1(input_shape,num_of_classes):
     # 构建模型
     model = Sequential()
-    model.add(Dense(512, activation='relu',input_shape=input_shape))
+    model.add(Dense(128, activation='relu',input_shape=input_shape))
+    model.add(keras.layers.core.Reshape((128,1)))
+    model.add(Conv1D(64, 20, activation='relu'))
+    # model.add(MaxPooling1D(2))
     model.add(Dense(128, activation='relu'))
+    model.add(GlobalAveragePooling1D())
     model.add(Dense(num_of_classes, activation='softmax'))
     # [编译模型] 配置模型，损失函数采用交叉熵，优化采用Adadelta，将识别准确率作为模型评估
     model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(), metrics=['accuracy'])
@@ -79,11 +82,11 @@ def keras_model(input_shape,num_of_classes):
 def test_model():
     features, labels = loadFromPickle()
     features, labels = shuffle(features, labels)
-    features=features.reshape(features.shape[0],64,20,1)
+    features=features.reshape(features.shape[0],64,40,1)
     labels=prepress_labels(labels)
     train_x, test_x, train_y, test_y = train_test_split(features, labels, random_state=0,
                                                         test_size=0.1)
-    model, callbacks_list = keras_model((64,20,1,),len(labels[0]))
+    model, callbacks_list = keras_model((64,40,1,),len(labels[0]))
     print_summary(model)
     model.fit(train_x, train_y, batch_size=128, epochs=5, verbose=1, validation_data=(test_x, test_y),
     	callbacks=[TensorBoard(log_dir="TensorBoard")])
@@ -98,13 +101,13 @@ def test_model():
 def test_model1():
     features, labels = loadFromPickle()
     features, labels = shuffle(features, labels)
-    # features=features.reshape(features.shape[0],20,32,1)
+    features=features.reshape(features.shape[0],32000)
     labels=prepress_labels(labels)
     train_x, test_x, train_y, test_y = train_test_split(features, labels, random_state=0,
-                                                        test_size=0.1)
-    model, callbacks_list = keras_model1((20*64,),len(labels[0]))
+                                                        test_size=0.2)
+    model, callbacks_list = keras_model1((32000,),len(labels[0]))
     print_summary(model)
-    model.fit(train_x, train_y, batch_size=128, epochs=10, verbose=1, validation_data=(test_x, test_y),
+    model.fit(train_x, train_y, batch_size=128, epochs=20, verbose=1, validation_data=(test_x, test_y),
     	callbacks=[TensorBoard(log_dir="TensorBoard")])
 
     score = model.evaluate(test_x, test_y, verbose=0)
@@ -115,13 +118,13 @@ def test_model1():
 def test_1dconv():
     features, labels = loadFromPickle()
     features, labels = shuffle(features, labels)
-    features=features.reshape(features.shape[0],32,20)
+    features=features.reshape(features.shape[0],64,40)
     labels=prepress_labels(labels)
     train_x, test_x, train_y, test_y = train_test_split(features, labels, random_state=0,
                                                         test_size=0.2)
-    model, callbacks_list = keras_model_1dconv((32,20),len(labels[0]))
+    model, callbacks_list = keras_model_1dconv((64,40),len(labels[0]))
     print_summary(model)
-    model.fit(train_x, train_y, batch_size=32, epochs=10, verbose=1, validation_data=(test_x, test_y),
+    model.fit(train_x, train_y, batch_size=128, epochs=10, verbose=1, validation_data=(test_x, test_y),
         callbacks=[TensorBoard(log_dir="TensorBoard")])
 
     score = model.evaluate(test_x, test_y, verbose=0)
@@ -131,3 +134,4 @@ def test_1dconv():
 
 if __name__ == '__main__':
 	test_1dconv()
+    # test_model1()

@@ -10,8 +10,18 @@ def get_mfcc(wav_path,samples=32000):
 	elif len(y) > samples:
 		y = y[:samples]
 	# print(y,sr)
-	mfccs = librosa.feature.mfcc(y=y, sr=sr)
+	mfccs = librosa.feature.mfcc(y=y, sr=sr,n_mfcc=40)
 	return np.array(mfccs).T
+
+def get_pcm(wav_path,samples=32000):
+    y, sr = librosa.load(wav_path,sr=None)
+    if len(y)<samples:
+        y = np.concatenate((y, np.array([0]*(samples-len(y)))), axis=0)
+    elif len(y) > samples:
+        y = y[:samples]
+    # print(y,sr)
+    # mfccs = librosa.feature.mfcc(y=y, sr=sr,n_mfcc=40)
+    return y
 
 def get_labels(data_dir):
     dirs = os.listdir(data_dir)
@@ -33,6 +43,25 @@ def load_data(data_dir,samples=32000):
             x = np.array(mfccs).astype('float32')
             x_load.append(x)
             y_load.append(labels.index(cat))  # directory name as label
+        print( files_dir + 'loaded ' )
+    return x_load,y_load
+
+def load_data_pcm(data_dir,samples=32000):
+    MAX_NUM = 1000
+    x_load = []
+    y_load = []
+    labels = get_labels(data_dir)
+    dirs = labels
+    for cat in dirs: #load directory
+        files_dir = data_dir + cat 
+        files = os.listdir(files_dir)
+        for file in files[:MAX_NUM]:
+            file_path = files_dir + "\\" + file
+            pcm = get_pcm(file_path,samples) # shape (32000,)
+            x = np.array(pcm).astype('float32')
+            x_load.append(x)
+            y_load.append(labels.index(cat))  # directory name as label
+        print( files_dir + 'loaded ' )
     return x_load,y_load
 
 def dump_label_name(dirs):
@@ -48,7 +77,8 @@ def dump_picle(features, labels):
     labels = np.array(labels).astype('float32')
     print(features.shape)
     print(labels.shape)
-    features=features.reshape(features.shape[0],features.shape[1] * features.shape[2])
+    if len(features.shape) == 3 :
+            features=features.reshape(features.shape[0],features.shape[1] * features.shape[2])
     print(features.shape)
     print(labels.shape)
     with open("features", "wb") as f:
@@ -65,7 +95,7 @@ def loadFromPickle():
 
 
 if __name__ == '__main__':
-    data_dir = '.\\data\\'
+    data_dir = '.\\data_gen\\'
     dirs = get_labels(data_dir)
     dump_label_name(dirs)
     ddd = load_label_name()

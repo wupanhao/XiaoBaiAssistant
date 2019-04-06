@@ -7,8 +7,8 @@ import pyaudio
 import wave
 import cv2
 
-from_dir = './data_raw/'
-to_dir = './data_gen/'
+from_dir = '.\data_raw\\zh\\'
+to_dir = '.\data_gen\\'
 
 # record command:
 # arecord -d 1 -r 16000 -c 1 -t wav -f S16_LE record.wav
@@ -176,12 +176,12 @@ def load_files(data_dir):
     print(files)
     for file in files:
         new_file = clip(data_dir+file)
-        for i in range(1,14):
-            new_file2 = roll(new_file,offset=i*10)
-            for j in range(1,14):
+        for i in range(1,15):
+            new_file2 = roll(new_file,offset=i*5)
+            for j in range(1,20):
                 new_file3 = tune(new_file2,factor=0.75+j*0.04)
-                for k in range(1,5):
-                    noise(new_file3,factor = 0.005*k)
+                for k in range(1,3):
+                    noise(new_file3,factor = 0.004*k)
 
 if __name__ == '__main__':
 	load_files(from_dir)
