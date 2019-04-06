@@ -24,12 +24,14 @@ def write_wav2(file_name,sr,y):
     return file_path
 
 def write_wav(file_name,sr,y):
+    maxv = np.iinfo(np.int16).max
     dir_name = file_name.split('_')[0]
     dest_dir = to_dir + dir_name +"/"    
     if os.path.exists(dest_dir)==False:
         os.makedirs(dest_dir)
     file_path = dest_dir+file_name	
-    librosa.output.write_wav(file_path, y, sr)
+    wavfile.write(file_path, sr, (y*maxv).astype(np.int16))  # 写入音频
+    # librosa.output.write_wav(file_path, y=(y*maxv).astype(np.int16), sr=sr)
     return	file_path
     '''
     with open(file_path,mode='w+b') as f:
@@ -170,15 +172,16 @@ def load_files_test(data_dir):
 		# os.system('aplay '+ new_file)
 
 def load_files(data_dir):
-	files = os.listdir(data_dir)
-	print(files)
-	for file in files[:2]:
-		new_file = clip(data_dir+file)
-		for i in range(1,15):
-			new_file2 = roll(new_file,offset=i*10)
-			for j in range(1,5):
-				new_file3 = tune(new_file2,factor=0.75+j*0.1)
-				noise(new_file3)
+    files = os.listdir(data_dir)
+    print(files)
+    for file in files:
+        new_file = clip(data_dir+file)
+        for i in range(1,14):
+            new_file2 = roll(new_file,offset=i*10)
+            for j in range(1,14):
+                new_file3 = tune(new_file2,factor=0.75+j*0.04)
+                for k in range(1,5):
+                    noise(new_file3,factor = 0.005*k)
 
 if __name__ == '__main__':
 	load_files(from_dir)

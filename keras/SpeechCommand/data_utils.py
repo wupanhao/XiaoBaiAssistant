@@ -3,8 +3,7 @@ import numpy as np
 import os
 import pickle
 
-
-def get_mfcc(wav_path,samples=16000):
+def get_mfcc(wav_path,samples=32000):
 	y, sr = librosa.load(wav_path,sr=None)
 	if len(y)<samples:
 		y = np.concatenate((y, np.array([0]*(samples-len(y)))), axis=0)
@@ -12,14 +11,14 @@ def get_mfcc(wav_path,samples=16000):
 		y = y[:samples]
 	# print(y,sr)
 	mfccs = librosa.feature.mfcc(y=y, sr=sr)
-	return mfccs
+	return np.array(mfccs).T
 
 def get_labels(data_dir):
     dirs = os.listdir(data_dir)
     dirs.sort()
     return dirs
 
-def load_data(data_dir):
+def load_data(data_dir,samples=32000):
     MAX_NUM = 1000
     x_load = []
     y_load = []
@@ -30,7 +29,7 @@ def load_data(data_dir):
         files = os.listdir(files_dir)
         for file in files[:MAX_NUM]:
             file_path = files_dir + "\\" + file
-            mfccs = get_mfcc(file_path) # shape (20 , 32)
+            mfccs = get_mfcc(file_path,samples) # shape (20 , 32)
             x = np.array(mfccs).astype('float32')
             x_load.append(x)
             y_load.append(labels.index(cat))  # directory name as label
@@ -65,7 +64,6 @@ def loadFromPickle():
     return features, labels
 
 
-
 if __name__ == '__main__':
     data_dir = '.\\data\\'
     dirs = get_labels(data_dir)
@@ -73,10 +71,10 @@ if __name__ == '__main__':
     ddd = load_label_name()
     print(ddd)
     '''
-	f = "test.wav"
-	mfccs = test2(f)
-	print( mfccs[0] )
-	print( mfccs.shape )
+    f = "test.wav"
+    mfccs = get_mfcc(f,32500)
+    print( mfccs[0] )
+    print( mfccs.shape )
     '''
 '''
 #pianopy
