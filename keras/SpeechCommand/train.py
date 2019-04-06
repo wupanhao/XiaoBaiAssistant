@@ -12,7 +12,13 @@ from keras.models import Sequential
 from keras.layers import Dense,Flatten, Conv2D
 from keras.layers import MaxPooling2D, Dropout
 
-from data_utils import loadFromPickle,prepress_labels
+from data_utils import loadFromPickle
+
+from keras.utils import np_utils
+
+def prepress_labels(labels):
+    labels = np_utils.to_categorical(labels) # one-hot编码 把类别id转换为表示当前类别的向量，比如0 1 2 =》 [[1 0 0] [0 1 0] [0 0 1]]
+    return labels
 
 def keras_model1(input_shape,output_shape):
     # 构建模型
