@@ -15,12 +15,14 @@ from keras.callbacks import TensorBoard
 
 from data_utils import loadFromPickle,prepress_labels,get_labels
 
-def keras_model1(input_shape,output_shape):
+ 
+
+def keras_model1(input_shape,num_classes):
     # 构建模型
     model = Sequential()
     model.add(Dense(512, activation='relu',input_shape=input_shape))
     model.add(Dense(128, activation='relu'))
-    model.add(Dense(output_shape, activation='softmax'))
+    model.add(Dense(num_classes, activation='softmax'))
     # [编译模型] 配置模型，损失函数采用交叉熵，优化采用Adadelta，将识别准确率作为模型评估
     model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(), metrics=['accuracy'])
     filepath = "model1.h5"
@@ -28,7 +30,7 @@ def keras_model1(input_shape,output_shape):
     callbacks_list = [checkpoint]
     return model, callbacks_list
 
-def keras_model(input_shape,output_shape):
+def keras_model(input_shape,num_classes):
     model = Sequential()
     model.add(Conv2D(16, (5, 5), input_shape=input_shape, activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2), padding='same'))
@@ -40,7 +42,7 @@ def keras_model(input_shape,output_shape):
     model.add(Dropout(0.6))
     model.add(Dense(128, activation='relu'))
     model.add(Dropout(0.6))
-    model.add(Dense(output_shape, activation='softmax'))
+    model.add(Dense(num_classes, activation='softmax'))
 
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     filepath = "model.h5"

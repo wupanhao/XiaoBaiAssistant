@@ -12,11 +12,11 @@ def recording(lists):
 			dtime = time.strftime('%y_%m_%d_%H_%M_%S',time.localtime())			
 			print('Please Speaking~')
 			file_name = data_dir + item + '_' + username + '_' + dtime + '.wav'
-			os.system('arecord -d 1 -r 16000 -c 1 -t wav -f S16_LE ' + file_name)
+			os.system('arecord -d 2 -r 16000 -c 1 -t wav -f S16_LE ' + file_name)
 			print('Recording end , play the recording')
 			os.system('aplay '+file_name)
 			ok = input("is that OK?(y/n):")
-			if ok!=y : 
+			if ok!='y' : 
 				os.system('rm ' + file_name)
 				print("bad file deleted")
 			else :
