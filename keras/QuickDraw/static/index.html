@@ -138,7 +138,11 @@
 			  $("#guess")[0].innerHTML=result[0][1]
 			  // console.log($("#result"))
 			  res_html = "<tr><th>Prediction</th><th>Probab</th></tr>"
-			  for (var i = 0; i < 5; i++) {
+			  var num = 5
+			  if result.length < 5{
+			  	num = result.length
+			  }
+			  for (var i = 0; i < num; i++) {
 			  	res_html+="<tr><td>"+result[i][1] + "</td><td>"+result[i][0]+"</td></tr>"
 			  }
 			  // console.log(res_html)

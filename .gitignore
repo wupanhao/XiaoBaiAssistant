@@ -6,3 +6,15 @@ labels
 *.bmp
 *.h5
 *.zip
+
+config.yaml
+*.pyc
+log.txt
+*.mp3
+*.wav
+!resources/*
+resources/music
+.ipynb_checkpoints
+_snowboydetect.so
+label_names
+core

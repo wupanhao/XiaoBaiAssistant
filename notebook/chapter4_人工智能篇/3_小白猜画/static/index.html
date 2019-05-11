@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8">
+	<title>猜画小白</title>
+</head>
+<body>
+	<div id="container">
+		<div>
+			画出以下列表的简笔画，让AI来预测你画的是什么,支持如下种类:
+			<span id="cat"></span>
+			
+		</div>
+		<div class="center">
+			<div><canvas id="canvas" width="280" height="280" ></canvas></div> 
+		</div>		
+		<div class="option">
+			<button id="clear">清空</button>
+			<button id="predict">预测</button>
+		</div>
+
+		<div class="bottom" id="prediction">
+			<span id="result">AI Guess Your Drawing is <span id="guess"></span></span>
+			<table id="top5">
+			</table>
+		</div>
+	</div>
+</body>
+
+<style type="text/css">
+	* {margin:0; padding:0;}
+	body {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		background-color: #fff;
+	}
+	button {
+		padding: 5px;
+		/*position: absolute;*/
+		top: 10px;
+		left: 10px;
+	}
+	.option{
+		margin: 2px;
+	}
+	.center{
+		display: flex;
+		width: 500px;
+	}
+	#save {
+		left: 60px;
+	}
+	#canvas{
+
+	}
+	#container{
+		display: flex;
+		flex-direction: column;
+		align-self: center;
+		max-width: 500px;
+	}
+	#cat{
+		/*display: flex;*/
+		/*justify-content: flex-start;*/
+		flex-wrap: wrap;
+	}
+</style>
+
+
+<script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+<script type="text/javascript">
+	function init_canvas(){
+		var canvas = $("#canvas"),
+			ctx = canvas[0].getContext('2d'),
+			winWidth = $(window).width(),
+			winHeight = $(window).height();
+
+		// canvas.attr('width',winWidth).attr("height",winHeight);
+
+		ctx.fillStyle = '#000';     
+		ctx.fillRect(0,0,winWidth,winHeight);
+
+		var running = ""  // draw
+			// offset = canvas.offset();
+		var offset = {}
+		offset.left = canvas[0].offsetLeft
+		offset.top = canvas[0].offsetTop
+		// console.log(canvas)
+		console.log(offset)
+		canvas.on("mousedown",function(e){
+			console.log(e)
+			var sx = e.pageX - offset.left,  //做个换算以防万一
+				sy = e.pageY - offset.top;
+
+			running = "draw";
+			ctx.beginPath();
+			ctx.moveTo(sx,sy);
+		});
+
+		canvas.on("mousemove", function(e){
+			if(running == "draw"){
+				toDraw(e.pageX-offset.left, e.pageY-offset.top)
+			}
+		});
+
+		canvas.on("mouseup", function(e){
+			running= "";
+		});
+
+		function toDraw(x, y){
+			ctx.lineTo(x,y); // 画路径
+			ctx.lineWidth = 10;
+			// ctx.strokeStyle = "#ff4444";
+			ctx.strokeStyle = "#fff";
+			ctx.stroke();	// 描边
+			ctx.save();		// 保存状态
+		}
+
+		$("#clear").click(function(){
+            ctx.clearRect(0, 0, winWidth, winHeight);
+            ctx.fillRect(0,0,winWidth,winHeight);
+        });
+
+		$("#predict").click(function(){
+			// $("img").remove();
+
+			// console.log(canvas[0])
+
+			// var base64img = canvas[0].toDataURL("image/jpeg", 1);
+			var base64img = canvas[0].toDataURL("image/jpeg", 0.1);
+
+			// console.log(base64img)
+			$.post( "/", { "base64img": base64img }, function( data ) {
+				result = JSON.parse(data)
+			  // console.log( result ); // John
+			  $("#guess")[0].innerHTML=result[0][1]
+			  // console.log($("#result"))
+			  res_html = "<tr><th>Prediction</th><th>Probab</th></tr>"
+			  var num = result.length>5?5:result.length
+			  for (var i = 0; i < num; i++) {
+			  	res_html+="<tr><td>"+result[i][1] + "</td><td>"+result[i][0]+"</td></tr>"
+			  }
+			  // console.log(res_html)
+			  $("#top5")[0].innerHTML=res_html
+
+			});				
+
+		});
+	}
+		$.get('/labels',function(data){
+				// console.log(data)
+			// var cats = JSON.parse(data)
+			$('#cat')[0].innerHTML = data.join(' , ')
+			init_canvas()
+		})
+</script>
+
+
+
+
+</html>

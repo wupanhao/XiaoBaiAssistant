@@ -1,0 +1,13 @@
+# 百度语音服务
+# # http://yuyin.baidu.com/
+baidu_yuyin:
+  api_key: 'your api_key'
+  secret_key: 'your secret_key'
+
+homeassistant:
+  url: 'http://localhost'
+  port: '8123'
+  password: '123789'
+
+tuling:
+  key: 'tuling api key'
