@@ -1,0 +1,14 @@
+__pycache__
+/data
+/data_raw
+/data_gen
+/Tensorboard
+features
+labels
+label_names
+*.npy
+*.png
+*.bmp
+*.wav
+*.h5
+*.zip
