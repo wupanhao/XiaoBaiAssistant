@@ -52,7 +52,7 @@ def keras_model(input_shape,num_classes):
 
 def test_model():
     features, labels = loadFromPickle()
-    labels_count = len(get_labels(".\\npy_data\\"))
+    labels_count = len(get_labels("npy_data"))
     # features, labels = augmentData(features, labels)
     features, labels = shuffle(features, labels)
     labels=prepress_labels(labels)
@@ -72,7 +72,7 @@ def test_model():
 
 def test_model1():
     features, labels = loadFromPickle()
-    labels_count = len(get_labels(".\\npy_data\\"))
+    labels_count = len(get_labels("npy_data"))
     # features, labels = augmentData(features, labels)
     features, labels = shuffle(features, labels)
     labels=prepress_labels(labels)

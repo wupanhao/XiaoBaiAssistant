@@ -4,14 +4,15 @@ import os
 import pickle
 
 def get_mfcc(wav_path,samples=32000):
-	y, sr = librosa.load(wav_path,sr=None)
-	if len(y)<samples:
-		y = np.concatenate((y, np.array([0]*(samples-len(y)))), axis=0)
-	elif len(y) > samples:
-		y = y[:samples]
-	# print(y,sr)
-	mfccs = librosa.feature.mfcc(y=y, sr=sr,n_mfcc=40)
-	return np.array(mfccs).T
+    y, sr = librosa.load(wav_path,sr=None)
+    if len(y)<samples:
+        y = np.concatenate((y, np.array([0]*(samples-len(y)))), axis=0)
+    elif len(y) > samples:
+        y = y[:samples]
+    # print(y,sr)
+    mfccs = librosa.feature.mfcc(y=y, sr=sr)
+    # mfccs = librosa.feature.mfcc(y=y, sr=sr,n_mfcc=40)
+    return np.array(mfccs).T
 
 def get_pcm(wav_path,samples=32000):
     y, sr = librosa.load(wav_path,sr=None)
@@ -19,8 +20,6 @@ def get_pcm(wav_path,samples=32000):
         y = np.concatenate((y, np.array([0]*(samples-len(y)))), axis=0)
     elif len(y) > samples:
         y = y[:samples]
-    # print(y,sr)
-    # mfccs = librosa.feature.mfcc(y=y, sr=sr,n_mfcc=40)
     return y
 
 def get_labels(data_dir):
@@ -35,10 +34,10 @@ def load_data(data_dir,samples=32000):
     labels = get_labels(data_dir)
     dirs = labels
     for cat in dirs: #load directory
-        files_dir = data_dir + cat 
+        files_dir = os.path.join(data_dir, cat) 
         files = os.listdir(files_dir)
         for file in files[:MAX_NUM]:
-            file_path = files_dir + "\\" + file
+            file_path = os.path.join(files_dir, file)
             mfccs = get_mfcc(file_path,samples) # shape (20 , 32)
             x = np.array(mfccs).astype('float32')
             x_load.append(x)
@@ -53,10 +52,10 @@ def load_data_pcm(data_dir,samples=32000):
     labels = get_labels(data_dir)
     dirs = labels
     for cat in dirs: #load directory
-        files_dir = data_dir + cat 
+        files_dir = os.path.join(data_dir, cat) 
         files = os.listdir(files_dir)
         for file in files[:MAX_NUM]:
-            file_path = files_dir + "\\" + file
+            file_path = os.path.join(files_dir, file)
             pcm = get_pcm(file_path,samples) # shape (32000,)
             x = np.array(pcm).astype('float32')
             x_load.append(x)
@@ -93,9 +92,8 @@ def loadFromPickle():
         labels = np.array(pickle.load(f))
     return features, labels
 
-
 if __name__ == '__main__':
-    data_dir = '.\\data_gen\\'
+    data_dir = 'data'
     dirs = get_labels(data_dir)
     dump_label_name(dirs)
     ddd = load_label_name()
