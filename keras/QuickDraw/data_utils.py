@@ -53,7 +53,13 @@ def loadFromPickle():
     with open("labels", "rb") as f:
         labels = np.array(pickle.load(f))
     return features, labels
-
+def dump_label_name(dirs):
+    with open("label_names", "wb") as f:
+        pickle.dump(dirs, f, protocol=4)    
+def load_label_name():
+    with open("label_names", "rb") as f:
+        dirs = np.array(pickle.load(f))
+    return dirs
 def prepress_labels(labels):
     labels = np_utils.to_categorical(labels) # one-hot编码 把类别id转换为表示当前类别的向量，比如0 1 2 =》 [[1 0 0] [0 1 0] [0 0 1]]
     return labels
@@ -65,13 +71,14 @@ def write_image(cat,index,array):
     cv2.imwrite(dest_dir + cat + "_" +str(index) + ".png", array)
 
 def load_npy_data(data_dir):
-    MAX_NUM = 1000
+    MAX_NUM = 300
     x_load = []
     y_load = []
     labels = get_labels(data_dir)
     dirs = labels
     write_img_file = False
     files = os.listdir(data_dir)
+    files.sort()
     for file in files:
         catname_full,_ = os.path.splitext(file)
         catname = catname_full.split('_')[-1]
@@ -97,3 +104,4 @@ if __name__ == '__main__':
     to_dir = ".\\img_data\\"
     features, labels = load_npy_data(from_dir)    
     dump_picle(features, labels)
+    dump_label_name(get_labels(from_dir))

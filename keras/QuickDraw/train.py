@@ -1,5 +1,5 @@
 # thanks to https://github.com/akshaybahadur21/QuickDraw
-
+import h5py
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
@@ -13,9 +13,7 @@ import pickle
 import keras
 from keras.callbacks import TensorBoard
 
-from data_utils import loadFromPickle,prepress_labels,get_labels
-
- 
+from data_utils import loadFromPickle,prepress_labels,get_labels,load_label_name
 
 def keras_model1(input_shape,num_classes):
     # 构建模型
@@ -38,10 +36,10 @@ def keras_model(input_shape,num_classes):
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2), padding='same'))
 
     model.add(Flatten())
-    model.add(Dense(512, activation='relu'))
-    model.add(Dropout(0.6))
-    model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.6))
+    # model.add(Dense(512, activation='relu'))
+    # model.add(Dropout(0.6))
+    # model.add(Dense(128, activation='relu'))
+    # model.add(Dropout(0.6))
     model.add(Dense(num_classes, activation='softmax'))
 
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -52,18 +50,16 @@ def keras_model(input_shape,num_classes):
 
 def test_model():
     features, labels = loadFromPickle()
-    labels_count = len(get_labels("npy_data"))
+    labels_count = len(load_label_name())
     # features, labels = augmentData(features, labels)
     features, labels = shuffle(features, labels)
     labels=prepress_labels(labels)
-    train_x, test_x, train_y, test_y = train_test_split(features, labels, random_state=0,
-                                                        test_size=0.1)
+    train_x, test_x, train_y, test_y = train_test_split(features, labels, random_state=0,test_size=0.2)
     train_x = train_x.reshape(train_x.shape[0], 28, 28, 1)
     test_x = test_x.reshape(test_x.shape[0], 28, 28, 1)
     model, callbacks_list = keras_model( (28,28,1,) , labels_count ) 
     print_summary(model)
-    model.fit(train_x, train_y, validation_data=(test_x, test_y), epochs=2, batch_size=64,
-              callbacks=[TensorBoard(log_dir="TensorBoard")])
+    model.fit(train_x, train_y, validation_data=(test_x, test_y), epochs=40, batch_size=128)
     # 开始评估模型效果 # verbose=0为不输出日志信息
     score = model.evaluate(test_x, test_y, verbose=0)
     print('Test loss:', score[0])
@@ -72,18 +68,16 @@ def test_model():
 
 def test_model1():
     features, labels = loadFromPickle()
-    labels_count = len(get_labels("npy_data"))
+    labels_count = len(load_label_name())
     # features, labels = augmentData(features, labels)
     features, labels = shuffle(features, labels)
     labels=prepress_labels(labels)
-    train_x, test_x, train_y, test_y = train_test_split(features, labels, random_state=0,
-                                                        test_size=0.1)
+    train_x, test_x, train_y, test_y = train_test_split(features, labels, random_state=0,test_size=0.1)
     # train_x = train_x.reshape(train_x.shape[0], 28, 28, 1)
     # test_x = test_x.reshape(test_x.shape[0], 28, 28, 1)
     model, callbacks_list = keras_model1( (28*28,) , labels_count ) 
     print_summary(model)
-    model.fit(train_x, train_y, validation_data=(test_x, test_y), epochs=500, batch_size=256,
-              callbacks=[TensorBoard(log_dir="TensorBoard")])
+    model.fit(train_x, train_y, validation_data=(test_x, test_y), epochs=20, batch_size=128)
 
     # 开始评估模型效果 # verbose=0为不输出日志信息
     score = model.evaluate(test_x, test_y, verbose=0)
@@ -92,4 +86,4 @@ def test_model1():
 
     model.save('model1.h5')
 
-test_model1()
+test_model()
