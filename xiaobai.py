@@ -62,12 +62,12 @@ class XiaoBai:
                 return ""
     #调用百度语音合成API进行回复
     def speak(self,text = '你好呀',lang = 'zh',type = 1 , vol = 5, spd = 5 , pit = 5):
+        print('小白：'+text)
         result  = self.client.synthesis(text, lang, type, {'vol': vol,'spd':spd,'pit':pit})
         # 识别正确返回语音二进制 错误则返回dict
         if not isinstance(result, dict):
             with open('speak.mp3', 'wb') as f:
                 f.write(result)
-            print('小白：'+text)
             os.system('mpg123 speak.mp3')
         else:
             print('emmmm，小白出错了呢',result)

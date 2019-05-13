@@ -7,7 +7,7 @@
 <body>
 	<div id="container">
 		<div>
-			画出以下列表的简笔画，让AI来预测你画的是什么,支持如下种类:
+			画出以下列表的简笔画，让小白来预测你画的是什么,支持如下种类:
 			<span id="cat"></span>
 			
 		</div>
@@ -20,7 +20,7 @@
 		</div>
 
 		<div class="bottom" id="prediction">
-			<span id="result">AI Guess Your Drawing is <span id="guess"></span></span>
+			<span id="result">小白猜测你画的是 <span id="guess"></span></span>
 			<table id="top5">
 			</table>
 		</div>
@@ -137,7 +137,7 @@
 			  // console.log( result ); // John
 			  $("#guess")[0].innerHTML=result[0][1]
 			  // console.log($("#result"))
-			  res_html = "<tr><th>Prediction</th><th>Probab</th></tr>"
+			  res_html = "<tr><th>预测</th><th>确信度</th></tr>"
 			  var num = result.length>5?5:result.length
 			  for (var i = 0; i < num; i++) {
 			  	res_html+="<tr><td>"+result[i][1] + "</td><td>"+result[i][0]+"</td></tr>"
