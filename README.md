@@ -47,7 +47,15 @@ cd XiaoBaiAssistant/
 cp _snowboydetect_py3.so _snowboydetect.so
 cp config.yaml.example config.yaml
 ```
-前往百度语音开放平台、图灵机器人官网注册账号，在config.yaml填写自己的API密钥等信息
+前往百度语音开放平台、图灵机器人官网注册账号，在config.yaml填写自己的API密钥等信息  
+默认唤醒词是用“小白”作为唤醒词，并且是私人模型，对我以外的人唤醒效果可能不太好，可前往https://snowboy.kitt.ai/ 训练自己的唤醒词模型替换，更改代码里面的“小白.pmdl”
+## 环境搭建(原生系统,不带keras环境)
+```
+sudo apt install python3-pyaudio libatlas-base-dev libglib2.0-dev
+sudo pip3 install pyyaml baidu-aip broadlink bluepy
+cd ~/XiaoBaiAssistant
+python3 demo.py
+```
 ## 环境搭建(基于Docker)
 ```
 运行如下命令安装Docker(带keras环境)
@@ -55,11 +63,4 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 sh get-docker.sh
 sudo docker run --rm -it --name="xiaobai" --privileged --net=host -v /home/pi/XiaoBaiAssistant:/xiaobai wupanhao/xiaobai-assistant:v1 env LANG=C.UTF-8 /usr/local/bin/jupyter-notebook --ip 0.0.0.0 --allow-root --notebook-dir /xiaobai/notebook/ 
 之后打开http://[树莓派ip]:8888进入Jupyter Notebook的环境
-```
-## 环境搭建(原生系统,不带keras环境)
-```
-sudo apt install python3-pyaudio libatlas-base-dev libglib2.0-dev
-sudo pip3 install pyyaml baidu-aip broadlink bluepy
-cd ~/XiaoBaiAssistant
-python3 demo.py
 ```
