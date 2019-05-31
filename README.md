@@ -6,11 +6,17 @@
 如果是使用同款WM8960音频扩展板(带小喇叭)
 ```
 运行如下命令安装音频扩展板的驱动
-git clone https://github.com/waveshare/WM8960-Audio-HAT
-cd WM8960-Audio-HAT
+git clone https://github.com/respeaker/seeed-voicecard
+cd seeed-voicecard
 sudo ./install.sh 
 sudo reboot
+
 ```
+~~`下面这个驱动貌似在最新系统上安装失败，不建议采用`~~  
+~~`git clone https://github.com/waveshare/WM8960-Audio-HAT`~~  
+~~`cd WM8960-Audio-HAT`~~  
+~~`sudo ./install.sh`~~ 
+~~`sudo reboot`~~  
 也可以通过USB声卡或USB摄像头接入麦克风
 然后你需要编辑自己HOME目录下的.asoundrc文件指定默认播放录音的设备，大概是这个样子的
 音频输入输出接口可以通过`arecord -l` 和 `aplay -l`查看
