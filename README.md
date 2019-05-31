@@ -51,7 +51,7 @@ cp config.yaml.example config.yaml
 默认唤醒词是用“小白”作为唤醒词，并且是私人模型，对我以外的人唤醒效果可能不太好，可前往https://snowboy.kitt.ai/ 训练自己的唤醒词模型替换，更改代码里面的“小白.pmdl”
 ## 环境搭建(原生系统,不带keras环境)
 ```
-sudo apt install python3-pyaudio libatlas-base-dev libglib2.0-dev
+sudo apt install python3-pyaudio libatlas-base-dev libglib2.0-dev mpg123
 sudo pip3 install pyyaml baidu-aip broadlink bluepy
 cd ~/XiaoBaiAssistant
 python3 demo.py
