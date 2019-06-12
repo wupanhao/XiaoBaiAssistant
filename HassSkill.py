@@ -29,12 +29,12 @@ class HassSkill(BaseSkill):
         r = requests.post(self.url + ":" + self.port + "/api/services/conversation/process", headers=headers,data=p)
         print(r.text)
 if __name__ == '__main__':
-  s = HassSkill()
-  s.handle("打开卫生间的灯")
-  time.sleep(2)
-  s.handle("关闭卫生间的灯")
-  #keyword_model = root_dir+'resources/models/snowboy.umdl'
-  #xiaobai = XiaoBai(keyword_model=keyword_model)
+  #s = HassSkill()
+  #s.handle("打开卫生间的灯")
+  #time.sleep(2)
+  #s.handle("关闭卫生间的灯")
+  keyword_model = root_dir+'resources/models/snowboy.umdl'
+  xiaobai = XiaoBai(keyword_model=keyword_model)
   #xiaobai.add_skill(MusicSkill())
-  #xiaobai.add_skill(HassSkill())
-  #xiaobai.listen_for_keyword()
+  xiaobai.add_skill(HassSkill())
+  xiaobai.listen_for_keyword()
