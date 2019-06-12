@@ -3,7 +3,7 @@ import os
 import yaml
 import random
 from aip import AipSpeech
-root_dir = "/xiaobai/"
+root_dir = "./"
 sys.path.append(root_dir)
 import snowboydecoder
 class XiaoBai:
@@ -20,8 +20,9 @@ class XiaoBai:
     def _callback(self):
             self.detector.terminate()
             n = random.randint(0,len(self.greetings)-1)
-            notify_sound = root_dir+'resources/greetings/'+self.greetings[n]
-            os.system("mpg123 "+notify_sound)   
+            #notify_sound = root_dir+'resources/greetings/'+self.greetings[n]
+            notify_sound = root_dir+'resources/ding.wav'
+            os.system("aplay "+notify_sound)   
             if self.callback is None:
                 res = self.listen_and_recognize()
                 if res == "":
@@ -34,7 +35,7 @@ class XiaoBai:
                             handled = True
                             break
                     if not handled:
-                        self.speak("小白暂时不会处理呢")
+                        self.speak("你说的是"+res)
             else:
                 self.callback()
             self.detector.start(detected_callback=self._callback,sleep_time=0.03)
@@ -94,3 +95,11 @@ class BaseSkill(metaclass=abc.ABCMeta):
             return True
         else:
             return False   
+if __name__ == '__main__':
+  keyword_model = root_dir+'resources/models/snowboy.umdl'
+  xiaobai = XiaoBai(keyword_model=keyword_model)
+  #xiaobai.add_skill(MusicSkill())
+  #xiaobai.add_skill(SwitchSkill())
+  #xiaobai.add_skill(SensorSkill())
+  #xiaobai.add_skill(TalkSkill())
+  xiaobai.listen_for_keyword()

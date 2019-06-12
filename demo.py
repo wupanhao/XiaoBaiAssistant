@@ -5,7 +5,6 @@ import random
 from aip import AipSpeech
 root_dir = './'
 import snowboydecoder
-
 class XiaoBai:
     #初始化函数，设置关键字模型，
     def __init__(self,keyword_model,callback=None):
@@ -20,8 +19,10 @@ class XiaoBai:
     def _callback(self):
             self.detector.terminate()
             n = random.randint(0,len(self.greetings)-1)
-            notify_sound = root_dir+'resources/greetings/'+self.greetings[n]
-            os.system("mpg123 "+notify_sound)   
+            #notify_sound = root_dir+'resources/greetings/'+self.greetings[n]
+            #os.system("mpg123 "+notify_sound)
+            notify_sound = root_dir+'resources/ding.wav'
+            os.system("aplay "+notify_sound)
             if self.callback is None:
                 res = self.listen_and_recognize()
                 if res == "":
@@ -251,10 +252,10 @@ class SensorSkill(BaseSkill):
         except:
             callback("出错了呢")
 if __name__ == '__main__':
-  keyword_model = root_dir+'resources/小白.pmdl'
+  keyword_model = root_dir+'resources/models/snowboy.umdl'
   xiaobai = XiaoBai(keyword_model=keyword_model)
   xiaobai.add_skill(MusicSkill())
-  xiaobai.add_skill(SwitchSkill())
-  xiaobai.add_skill(SensorSkill())
+  #xiaobai.add_skill(SwitchSkill())
+  #xiaobai.add_skill(SensorSkill())
   xiaobai.add_skill(TalkSkill())
   xiaobai.listen_for_keyword()
